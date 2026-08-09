@@ -1,0 +1,29 @@
+Core architectural principles, phased execution plan, and component definitions for the distributed AI agent project.
+
+Instructions
+AI Agent Project Guidelines
+Core Principles
+LLM Role: The LLM ONLY plans actions. It NEVER executes directly on the OS and NEVER handles secrets/credentials.
+Capabilities: Every agent MUST declare an explicit contract of capabilities (e.g., send_message, read_events). No generic "full access" is permitted.
+Risk-Based Execution: Actions are classified by risk (0-5) determining if they execute directly, require user confirmation, or are blocked.
+Security: Tokens and API keys are stored in a separate secure vault, inaccessible to the LLM.
+Auditability & Explicability: Every action is logged (append-only: who, what, when, authorization) and the system must be able to explain why an action was taken.
+Kill Switch: A mechanism to immediately revoke permissions, sessions, and halt agents must exist.
+Phased Execution Plan
+Fase 0: Setup (Repo, Docker, basic environment).
+Fase 1: Skeleton (Orchestrator + EchoAgent + Chat Interface).
+Fase 2: Identity Gateway + Basic Policy Engine.
+Fase 3: Permissions Model + Risk Levels + Confirmation flows.
+Fase 4: Real Agents (Calendar, File, Telegram).
+Fase 5: Auditing + Kill Switch.
+Fase 6: Academic Use Cases + Robustness Testing (e.g., worker failure).
+Fase 7: Assisted Profile (simplified UI + delegated permissions).
+Fase 8 (Optional): Custom Mobile/Desktop UI.
+Component Responsibilities
+Identity Gateway: Authenticates users across platforms (Telegram, Discord).
+Orchestrator: Coordinates the flow (Plan -> Policy -> Execute -> Audit). No external credentials.
+LLM Planner: Translates natural language to structured intent (action + params).
+Policy Engine: Evaluates intent against permissions and risk levels.
+Tool Router: Routes approved actions to the specific agent.
+Agents: Microservices that execute actions using specific credentials, isolated from each other.
+Audit Log: Immutable record of all executions.
