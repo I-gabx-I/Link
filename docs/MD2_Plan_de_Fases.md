@@ -13,7 +13,7 @@ Para que eso funcione, dos reglas fijas:
 
 | Fase | Nombre | Responsable | Estado | Rama |
 |---|---|---|---|---|
-| 0 | Setup del entorno | Marcos + Samuel | Pendiente | `fase-0-setup` |
+| 0 | Setup del entorno | Marcos + Samuel | Terminada y probada (por Marcos — pendiente validar en máquina de Samuel) | `fase-0-setup` |
 | 1 | Esqueleto (Orquestador + interfaz + agente eco) | Marcos | Pendiente | `fase-1-esqueleto` |
 | 2 | Identity Gateway + Policy Engine básico | Samuel | Pendiente | `fase-2-identidad-policy` |
 | 3 | Modelo de permisos + niveles de riesgo + confirmación | Marcos | Pendiente | `fase-3-permisos-riesgo` |
