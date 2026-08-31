@@ -1,7 +1,7 @@
 import os
 import json
 from google import genai
-from google.genai import types
+from google.genai import types, errors as genai_errors
 
 API_KEY = os.getenv("LLM_API_KEY")
 MODEL = os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite")
@@ -32,16 +32,19 @@ def _build_system_prompt(available_tools: list[dict]) -> str:
 def plan_action(user_message: str, available_tools: list[dict]) -> dict:
     system_prompt = _build_system_prompt(available_tools)
 
-    response = client.models.generate_content(
-        model=MODEL,
-        contents=user_message,
-        config=types.GenerateContentConfig(
-            system_instruction=system_prompt,
-            response_mime_type="application/json",
-        ),
-    )
+    try:
+        response = client.models.generate_content(
+            model=MODEL,
+            contents=user_message,
+            config=types.GenerateContentConfig(
+                system_instruction=system_prompt,
+                response_mime_type="application/json",
+            ),
+        )
+    except genai_errors.APIError as e:
+        return {"tool": None, "params": {}, "error": "llm_unavailable", "detail": str(e)}
 
     try:
         return json.loads(response.text)
     except (json.JSONDecodeError, TypeError):
-        return {"tool": None, "params": {}, "error": "Respuesta no interpretable", "raw": response.text}
+        return {"tool": None, "params": {}, "error": "bad_json", "raw": response.text}
