@@ -95,3 +95,16 @@ Para dar por terminada la Fase 0 (MD2), falta:
 - [ ] Confirmar que ambos pueden ejecutar `docker compose up` sin errores, siguiendo únicamente el README.
 
 Con esto, los 4 documentos base (MD0, MD1, MD2, MD3) quedan completos y consistentes entre sí.
+
+## 7. Mejoras futuras (no bloquean el MVP)
+
+- **Fallback entre modelos de Gemini:** si el modelo configurado en `GEMINI_MODEL`
+  está saturado (503), reintentar automáticamente con otro modelo de Gemini antes
+  de fallar.
+- **Fallback entre proveedores de LLM:** si Gemini completo no responde, reintentar
+  con otro proveedor gratuito (ej. Groq) antes de devolver error al usuario.
+- **Modelo local como última red de seguridad:** correr un modelo pequeño vía
+  Ollama, para cuando no haya internet o todos los proveedores en la nube fallen.
+  Candidato natural para el cierre del proyecto (última fase), ya que el trabajo
+  del `llm_planner` es una tarea de clasificación ligera, bien adecuada para un
+  modelo local pequeño.
