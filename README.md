@@ -53,3 +53,21 @@ Cada fase del proyecto vive en su propia rama (`fase-N-nombre`) y solo se fusion
 
 - `Fase N: [nombre] — probada y terminada`
 - `Fase N: [nombre] — WIP, falta [detalle]`
+
+
+## Fase 1 — Probar el bot de Telegram localmente
+
+Como el webhook de Telegram necesita una URL pública, en desarrollo local se usa un túnel:
+
+1. `docker compose up --build` (en una terminal, déjala corriendo).
+2. En otra terminal: `cloudflared tunnel --url http://localhost:8000`
+3. Copia la URL `https://....trycloudflare.com` que te da.
+4. Registra el webhook (una sola vez por sesión de túnel, ya que la URL cambia cada vez):
+```powershell
+   $token = (Get-Content .env | Select-String "TELEGRAM_BOT_TOKEN=").ToString().Split("=")[1]
+   $url = "TU_URL_DE_CLOUDFLARED_AQUI"
+   Invoke-RestMethod -Uri "https://api.telegram.org/bot$token/setWebhook?url=$url/webhook/telegram"
+```
+5. Escríbele a tu bot en Telegram para probar.
+
+Nota: se usó Cloudflare Tunnel en vez de ngrok por conflictos recurrentes con Windows Defender (falso positivo conocido de ngrok).
