@@ -1,6 +1,7 @@
 import os
 import httpx
 from telegram import Update, Bot
+from identity import resolve_user
 
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 ORCHESTRATOR_URL = os.getenv("ORCHESTRATOR_URL", "http://orchestrator:8001")
@@ -18,11 +19,13 @@ async def handle_update(data: dict):
     telegram_user_id = update.message.from_user.id
     chat_id = update.message.chat_id
 
+    internal_user_id = resolve_user(telegram_user_id)
+
     try:
         async with httpx.AsyncClient(timeout=10.0) as client:
             response = await client.post(
                 f"{ORCHESTRATOR_URL}/process",
-                json={"message": user_message, "telegram_user_id": telegram_user_id},
+                json={"message": user_message, "internal_user_id": internal_user_id},
             )
             response.raise_for_status()
             reply = response.json().get("reply", "El orquestador no devolvió respuesta.")

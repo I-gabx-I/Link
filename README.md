@@ -71,3 +71,13 @@ Como el webhook de Telegram necesita una URL pública, en desarrollo local se us
 5. Escríbele a tu bot en Telegram para probar.
 
 Nota: se usó Cloudflare Tunnel en vez de ngrok por conflictos recurrentes con Windows Defender (falso positivo conocido de ngrok).
+
+## Fase 2 — Identity Gateway + LLM Planner
+
+- El `gateway` resuelve la identidad del usuario contra Firestore (colección `users`)
+  antes de pasarle el mensaje al Orquestador.
+- El `orchestrator` usa Gemini (`GEMINI_MODEL` en `.env`) para traducir el mensaje
+  del usuario a una acción estructurada, limitada estrictamente a las herramientas
+  declaradas en `llm_planner/tools_registry.py`.
+- Requiere `LLM_API_KEY` (Google AI Studio) y `FIREBASE_PROJECT_ID` +
+  `FIREBASE_CREDENTIALS_PATH` configurados en `.env`.

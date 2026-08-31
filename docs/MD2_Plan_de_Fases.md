@@ -15,7 +15,7 @@ Para que eso funcione, dos reglas fijas:
 |---|---|---|---|---|
 | 0 | Setup del entorno | Marcos + Samuel | Terminada y probada (por Marcos — pendiente validar en máquina de Samuel) | `fase-0-setup` |
    | 1 | Esqueleto (Orquestador + interfaz + agente eco) | Marcos | Terminada y probada | `fase-1-esqueleto` |
-| 2 | Identity Gateway + Policy Engine básico | Samuel | Pendiente | `fase-2-identidad-policy` |
+| 2 | Identity Gateway + Policy Engine básico | Samuel | Terminada y probada (por Marcos) | `fase-2-identidad-llm` |
 | 3 | Modelo de permisos + niveles de riesgo + confirmación | Marcos | Pendiente | `fase-3-permisos-riesgo` |
 | 4 | Agentes reales (Calendar, File, Telegram send) | Samuel | Pendiente | `fase-4-agentes-reales` |
 | 5 | Auditoría + explicabilidad + kill switch | Marcos | Pendiente | `fase-5-auditoria-killswitch` |
