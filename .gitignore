@@ -20,3 +20,7 @@ Thumbs.db
 # Editor
 .vscode/
 .idea/
+
+# Logs del LLM (contienen mensajes de usuarios, no se suben)
+logs/*
+!logs/.gitkeep

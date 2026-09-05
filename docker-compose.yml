@@ -9,11 +9,15 @@ services:
     networks:
       - public_net
 
+
+
   orchestrator:
     build: ./orchestrator
     ports:
       - "8001:8001"
     env_file: .env
+    volumes:
+      - ./logs:/app/logs
     networks:
       - public_net
       - internal_net
