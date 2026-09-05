@@ -30,6 +30,11 @@ async def process(msg: IncomingMessage):
         return {"reply": "El asistente está saturado en este momento, por favor intenta de nuevo en unos segundos."}
 
     tool = decision.get("tool")
+
+    if tool == "chat":
+        answer = decision.get("params", {}).get("answer", "No tengo una respuesta para eso.")
+        return {"reply": answer}
+
     if not tool or tool not in AGENT_URLS:
         return {"reply": "No encontré una acción para hacer eso todavía."}
 
