@@ -5,6 +5,6 @@ AVAILABLE_TOOLS = [
     },
     {
         "name": "chat",
-        "description": "Responde preguntas generales o conversación cuando ninguna otra herramienta aplica. No ejecuta ninguna acción ni modifica nada del sistema.",
+        "description": "Responde SOLO saludos, cortesías, o preguntas sobre qué puede hacer este asistente. No se usa para conocimiento general, programación, ni temas ajenos a gestionar tareas personales.",
     },
 ]
