@@ -1,7 +1,21 @@
-# Secretos y entornos
+# Secrets and local environments
 .env
 *.env.local
 serviceAccountKey.json
+google-services.json
+keystore.properties
+*.jks
+*.keystore
+
+# Android / Gradle
+*.iml
+.gradle/
+.kotlin/
+local.properties
+build/
+captures/
+.externalNativeBuild/
+.cxx/
 
 # Python
 __pycache__/
@@ -10,17 +24,13 @@ __pycache__/
 .venv/
 venv/
 
-# Docker
-*.log
-
-# Sistema
+# Editors and operating systems
+.idea/
+.vscode/
 .DS_Store
 Thumbs.db
 
-# Editor
-.vscode/
-.idea/
-
-# Logs del LLM (contienen mensajes de usuarios, no se suben)
+# Runtime logs
+*.log
 logs/*
 !logs/.gitkeep
