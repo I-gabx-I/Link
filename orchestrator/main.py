@@ -4,6 +4,7 @@ import httpx
 
 from llm_planner.planner import plan_action
 from llm_planner.tools_registry import AVAILABLE_TOOLS
+from policy_engine.policy import evaluate as policy_evaluate
 
 app = FastAPI(title="Orchestrator")
 
@@ -29,22 +30,35 @@ async def process(msg: IncomingMessage):
     if decision.get("error") == "llm_unavailable":
         return {"reply": "El asistente está saturado en este momento, por favor intenta de nuevo en unos segundos."}
 
+    if decision.get("out_of_scope"):
+        return {"reply": "Ese tema está fuera de lo que este asistente puede ayudarte a resolver."}
+
     tool = decision.get("tool")
+    if not tool:
+        return {"reply": "No encontré una acción para hacer eso todavía."}
+
+    policy = policy_evaluate(tool, msg.internal_user_id)
+
+    if policy["allowed"] is False:
+        if policy["reason"] == "sin_permiso":
+            return {"reply": f"No tienes permiso otorgado para usar '{tool}' en este momento."}
+        if policy["reason"] == "riesgo_bloqueado":
+            return {"reply": "Esa acción está bloqueada por su nivel de riesgo."}
+        return {"reply": "No encontré una acción para hacer eso todavía."}
+
+    if policy["allowed"] == "requiere_confirmacion":
+        return {"reply": "Esta acción requiere confirmación (lo construimos en el siguiente paso, con el TelegramAgent real)."}
 
     if tool == "chat":
-        answer = decision.get("params", {}).get("answer", "No tengo una respuesta para eso.")
+        answer = decision.get("params", {}).get("answer", "¡Hola! ¿En qué puedo ayudarte?")
         return {"reply": answer}
 
-    if not tool or tool not in AGENT_URLS:
+    if tool not in AGENT_URLS:
         return {"reply": "No encontré una acción para hacer eso todavía."}
 
     agent_url = AGENT_URLS[tool]
     params = decision.get("params", {})
-
     async with httpx.AsyncClient(timeout=10.0) as client:
-        agent_response = await client.post(
-            f"{agent_url}/execute",
-            json={"tool": tool, "params": params},
-        )
+        agent_response = await client.post(f"{agent_url}/execute", json={"tool": tool, "params": params})
     result = agent_response.json()
     return {"reply": result.get("result", "Sin respuesta del agente")}
