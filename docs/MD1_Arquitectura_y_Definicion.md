@@ -66,7 +66,7 @@ CAPABILITIES
 --------------
 contact_add(name, username)
 telegram_send(contact, message)
-
+```
 Nota: `telegram_send` no manda el mensaje directamente — un bot no puede escribirle a
 alguien que nunca inició un chat con él, y si pudiera, el mensaje llegaría marcado como
 enviado por el bot, no por el usuario. En cambio, genera un link de Telegram
