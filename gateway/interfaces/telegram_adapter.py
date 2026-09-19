@@ -22,7 +22,7 @@ async def handle_update(data: dict):
     internal_user_id = resolve_user(telegram_user_id)
 
     try:
-        async with httpx.AsyncClient(timeout=10.0) as client:
+        async with httpx.AsyncClient(timeout=30.0) as client:
             response = await client.post(
                 f"{ORCHESTRATOR_URL}/process",
                 json={"message": user_message, "internal_user_id": internal_user_id},

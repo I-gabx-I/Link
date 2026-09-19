@@ -29,6 +29,34 @@ services:
     networks:
       - internal_net
 
+
+  agent_calendar:
+    build: ./agents/agent_calendar
+    env_file: .env
+    volumes:
+      - ./database:/app/database
+    networks:
+      - internal_net
+      - public_net
+
+  agent_file:
+    build: ./agents/agent_file
+    volumes:
+      - ./shared_files:/app/shared_files:ro
+    networks:
+      - internal_net
+
+  agent_telegram:
+    build: ./agents/agent_telegram
+    env_file: .env
+    volumes:
+      - ./database:/app/database
+    networks:
+      - internal_net
+      - public_net
+
+
+
 networks:
   public_net:
   internal_net:

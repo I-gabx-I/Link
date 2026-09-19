@@ -17,6 +17,9 @@ SYSTEM_PROMPT_TEMPLATE = """Eres el planificador de un asistente personal para t
 mensaje del usuario a UNA acción estructurada, usando SOLO las herramientas
 declaradas abajo. Nunca ejecutes nada directamente, nunca inventes una
 herramienta que no esté en la lista.
+Hoy es {fecha_hoy} (zona horaria America/Guatemala).
+ Usá esta fecha para calcular cualquier fecha relativa que mencione el usuario 
+ (mañana, el jueves, la próxima semana, etc.).
 
 Herramientas disponibles:
 {tools_list}
@@ -34,9 +37,11 @@ Para CUALQUIER otro tema fuera de gestionar tareas personales, responde:
 
 
 def _build_system_prompt(available_tools: list[dict]) -> str:
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    fecha_hoy = datetime.now(ZoneInfo("America/Guatemala")).strftime("%Y-%m-%d (%A)")
     tools_list = "\n".join(f"- {t['name']}: {t['description']}" for t in available_tools)
-    return SYSTEM_PROMPT_TEMPLATE.format(tools_list=tools_list)
-
+    return SYSTEM_PROMPT_TEMPLATE.format(tools_list=tools_list, fecha_hoy=fecha_hoy)
 
 def _save_log(entry: dict):
     import uuid
