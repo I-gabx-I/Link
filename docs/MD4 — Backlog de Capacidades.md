@@ -30,6 +30,8 @@ Esta distinción decide en qué categoría cae cada idea nueva que se les ocurra
 | Responder preguntas generales | Gemini (`chat`, ya construido) | 0 |
 | Traducir o resumir un documento | Gemini | 0-1 |
 
+| Leer contenido de imágenes (OCR o modelo con visión) | pytesseract (requiere binario tesseract en el Dockerfile) o mandarla a un modelo con visión (Gemini la soporta nativo) | 0-1 |
+
 *(La capability de llamadas es una que no habían considerado y es más fácil de lo que parece — casi gratis agregarla una vez tengan el patrón de deep links funcionando.)*
 
 ## 5. Backlog — Categoría B: requiere la app nativa (Fase 8), no antes

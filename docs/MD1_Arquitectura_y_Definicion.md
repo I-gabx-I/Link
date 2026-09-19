@@ -64,10 +64,19 @@ Ejemplo — `TelegramAgent`:
 ```
 CAPABILITIES
 --------------
-send_message(contact, text)
-read_recent_messages(contact, limit)
-search_contact(name)
-```
+contact_add(name, username)
+telegram_send(contact, message)
+
+Nota: `telegram_send` no manda el mensaje directamente — un bot no puede escribirle a
+alguien que nunca inició un chat con él, y si pudiera, el mensaje llegaría marcado como
+enviado por el bot, no por el usuario. En cambio, genera un link de Telegram
+(`t.me/usuario?text=...`) precargado con el mensaje, y el usuario da el toque final para
+enviarlo desde su propia cuenta. Esto mantiene la garantía de que el sistema nunca actúa
+como el usuario sin su participación directa en la acción final.
+
+
+
+
 
 Ejemplo — `CalendarAgent`:
 

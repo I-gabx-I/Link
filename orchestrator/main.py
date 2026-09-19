@@ -5,12 +5,22 @@ import httpx
 from llm_planner.planner import plan_action
 from llm_planner.tools_registry import AVAILABLE_TOOLS
 from policy_engine.policy import evaluate as policy_evaluate
+from policy_engine import pending_actions as pending
 
 app = FastAPI(title="Orchestrator")
 
 AGENT_URLS = {
     "echo": "http://agent_echo:8003",
+    "calendar_read": "http://agent_calendar:8004",
+    "calendar_create": "http://agent_calendar:8004",
+    "file_read": "http://agent_file:8005",
+    "contact_add": "http://agent_telegram:8006",
+    "telegram_send": "http://agent_telegram:8006",
+
+
 }
+
+
 
 
 class IncomingMessage(BaseModel):
@@ -23,8 +33,40 @@ def health_check():
     return {"status": "orchestrator alive"}
 
 
+def _summarize_action(tool: str, params: dict) -> str:
+    if tool == "calendar_create":
+        return f"Crear el evento '{params.get('summary')}' el {params.get('date')} a las {params.get('time')}."
+    if tool == "telegram_send":
+        return f"Enviarle un mensaje a {params.get('contact')}: \"{params.get('message')}\"."
+    return f"Ejecutar '{tool}'."
+
+async def _execute_tool(tool: str, params: dict, internal_user_id: str) -> dict:
+    if tool not in AGENT_URLS:
+        return {"reply": "No encontré una acción para hacer eso todavía."}
+    agent_url = AGENT_URLS[tool]
+    async with httpx.AsyncClient(timeout=15.0) as client:
+        agent_response = await client.post(
+            f"{agent_url}/execute",
+            json={"tool": tool, "params": params, "internal_user_id": internal_user_id},
+        )
+    result = agent_response.json()
+    if "error" in result:
+        return {"reply": f"Hubo un problema ejecutando la acción: {result['error']}"}
+    return {"reply": result.get("result", "Sin respuesta del agente")}
+
 @app.post("/process")
 async def process(msg: IncomingMessage):
+    pending_action = pending.get_pending(msg.internal_user_id)
+    if pending_action:
+        verdict = pending.classify_confirmation(msg.message)
+        if verdict == "yes":
+            pending.clear_pending(msg.internal_user_id)
+            return await _execute_tool(pending_action["tool"], pending_action["params"], msg.internal_user_id)
+        if verdict == "no":
+            pending.clear_pending(msg.internal_user_id)
+            return {"reply": "Listo, cancelé esa acción."}
+        return {"reply": f"Tenés una acción pendiente de confirmar: {pending_action['summary']} Respondé 'sí' o 'no'."}
+
     decision = plan_action(msg.message, AVAILABLE_TOOLS)
 
     if decision.get("error") == "llm_unavailable":
@@ -46,19 +88,15 @@ async def process(msg: IncomingMessage):
             return {"reply": "Esa acción está bloqueada por su nivel de riesgo."}
         return {"reply": "No encontré una acción para hacer eso todavía."}
 
+    params = decision.get("params", {})
+
     if policy["allowed"] == "requiere_confirmacion":
-        return {"reply": "Esta acción requiere confirmación (lo construimos en el siguiente paso, con el TelegramAgent real)."}
+        summary = _summarize_action(tool, params)
+        pending.save_pending(msg.internal_user_id, tool, params, summary)
+        return {"reply": f"¿Confirmás esta acción? {summary} Respondé 'sí' o 'no'."}
 
     if tool == "chat":
-        answer = decision.get("params", {}).get("answer", "¡Hola! ¿En qué puedo ayudarte?")
+        answer = params.get("answer", "¡Hola! ¿En qué puedo ayudarte?")
         return {"reply": answer}
 
-    if tool not in AGENT_URLS:
-        return {"reply": "No encontré una acción para hacer eso todavía."}
-
-    agent_url = AGENT_URLS[tool]
-    params = decision.get("params", {})
-    async with httpx.AsyncClient(timeout=10.0) as client:
-        agent_response = await client.post(f"{agent_url}/execute", json={"tool": tool, "params": params})
-    result = agent_response.json()
-    return {"reply": result.get("result", "Sin respuesta del agente")}
+    return await _execute_tool(tool, params, msg.internal_user_id)

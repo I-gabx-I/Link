@@ -133,6 +133,7 @@ El orden es lineal a propósito: cada fase depende de que la anterior esté real
 - [ ] Una acción de riesgo 3 pide confirmación explícita al usuario antes de ejecutar.
 - [ ] Una acción de riesgo 5 se bloquea (o pide autenticación adicional).
 - [ ] Existe al menos un permiso que el usuario puede otorgar/revocar y el sistema lo respeta.
+- [ ] Calendar además permite crear eventos (`calendar_create`), pasando por el flujo real de confirmación.
 
 ---
 
@@ -145,10 +146,10 @@ El orden es lineal a propósito: cada fase depende de que la anterior esté real
 - `TelegramAgent`: buscar contacto y enviar mensaje (ya con el flujo de confirmación de la Fase 3 aplicado).
 
 **Definición de Terminado:**
-- [ ] Caso de uso 1 (consultar calendario) funciona de punta a punta.
-- [ ] Caso de uso 3 (buscar documento local) funciona de punta a punta.
-- [ ] Caso de uso 4 (buscar contacto y enviar mensaje) funciona de punta a punta, con confirmación incluida.
-- [ ] Cada agente respeta estrictamente su contrato de capacidades (no puede hacer nada fuera de lo declarado en el MD 1).
+- [X] Caso de uso 1 (consultar calendario) funciona de punta a punta.
+- [X] Caso de uso 3 (buscar documento local) funciona de punta a punta.
+- [X] Caso de uso 4 (buscar contacto y enviar mensaje) funciona de punta a punta, con confirmación incluida.
+- [X] Cada agente respeta estrictamente su contrato de capacidades (no puede hacer nada fuera de lo declarado en el MD 1).
 
 ---
 

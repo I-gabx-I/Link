@@ -108,3 +108,8 @@ Con esto, los 4 documentos base (MD0, MD1, MD2, MD3) quedan completos y consiste
   Candidato natural para el cierre del proyecto (última fase), ya que el trabajo
   del `llm_planner` es una tarea de clasificación ligera, bien adecuada para un
   modelo local pequeño.
+  - **Autenticación de LLM por usuario (BYOK — "trae tu propia llave"):** permitir que cada
+  usuario conecte su propia cuenta/API key de Gemini (u otro proveedor), guardada de forma
+  encriptada en Firestore, en vez de depender de la cuota compartida de la plataforma.
+  Candidato natural para un plan premium. Comparte el mismo mecanismo de "credenciales por
+  usuario" que necesitaría Drive-por-usuario (ver MD4, Categoría A).

@@ -1,7 +1,9 @@
 # Secretos y entornos
 .env
 *.env.local
-serviceAccountKey.json
+
+database/*
+!database/.gitkeep
 
 # Python
 __pycache__/
@@ -24,3 +26,8 @@ Thumbs.db
 # Logs del LLM (contienen mensajes de usuarios, no se suben)
 logs/*
 !logs/.gitkeep
+
+
+# Archivos compartidos (contienen secretos, no se suben)
+shared_files/*
+!shared_files/.gitkeep

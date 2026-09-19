@@ -14,6 +14,11 @@ db = firestore.client()
 RISK_LEVELS = {
     "chat": 0,
     "echo": 1,
+    "calendar_read": 0,
+    "calendar_create": 3,
+    "file_read": 0,
+    "contact_add": 0,
+    "telegram_send": 3,
 }
 
 DEFAULT_GRANTED_TOOLS = list(RISK_LEVELS.keys())
