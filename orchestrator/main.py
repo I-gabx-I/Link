@@ -42,7 +42,7 @@ def _summarize_action(tool: str, params: dict) -> str:
 
 async def _execute_tool(tool: str, params: dict, internal_user_id: str) -> dict:
     if tool not in AGENT_URLS:
-        return {"reply": "No encontré una acción para hacer eso todavía."}
+        return {"type": "info", "reply": "No encontré una acción para hacer eso todavía."}
     agent_url = AGENT_URLS[tool]
     async with httpx.AsyncClient(timeout=15.0) as client:
         agent_response = await client.post(
@@ -51,8 +51,12 @@ async def _execute_tool(tool: str, params: dict, internal_user_id: str) -> dict:
         )
     result = agent_response.json()
     if "error" in result:
-        return {"reply": f"Hubo un problema ejecutando la acción: {result['error']}"}
-    return {"reply": result.get("result", "Sin respuesta del agente")}
+        return {"type": "error", "reply": f"Hubo un problema ejecutando la acción: {result['error']}"}
+    return {
+        "type": "result",
+        "reply": result.get("result", "Sin respuesta del agente"),
+        "action_url": result.get("action_url"),
+    }
 
 @app.post("/process")
 async def process(msg: IncomingMessage):
@@ -64,39 +68,47 @@ async def process(msg: IncomingMessage):
             return await _execute_tool(pending_action["tool"], pending_action["params"], msg.internal_user_id)
         if verdict == "no":
             pending.clear_pending(msg.internal_user_id)
-            return {"reply": "Listo, cancelé esa acción."}
-        return {"reply": f"Tenés una acción pendiente de confirmar: {pending_action['summary']} Respondé 'sí' o 'no'."}
+            return {"type": "info", "reply": "Listo, cancelé esa acción."}
+        return {
+            "type": "confirmation",
+            "reply": f"Tenés una acción pendiente de confirmar: {pending_action['summary']} Respondé 'sí' o 'no'.",
+            "summary": pending_action["summary"],
+        }
 
     decision = plan_action(msg.message, AVAILABLE_TOOLS)
 
     if decision.get("error") == "llm_unavailable":
-        return {"reply": "El asistente está saturado en este momento, por favor intenta de nuevo en unos segundos."}
+        return {"type": "error", "reply": "El asistente está saturado en este momento, por favor intenta de nuevo en unos segundos."}
 
     if decision.get("out_of_scope"):
-        return {"reply": "Ese tema está fuera de lo que este asistente puede ayudarte a resolver."}
+        return {"type": "info", "reply": "Ese tema está fuera de lo que este asistente puede ayudarte a resolver."}
 
     tool = decision.get("tool")
     if not tool:
-        return {"reply": "No encontré una acción para hacer eso todavía."}
+        return {"type": "info", "reply": "No encontré una acción para hacer eso todavía."}
 
     policy = policy_evaluate(tool, msg.internal_user_id)
 
     if policy["allowed"] is False:
         if policy["reason"] == "sin_permiso":
-            return {"reply": f"No tienes permiso otorgado para usar '{tool}' en este momento."}
+            return {"type": "denied", "reply": f"No tienes permiso otorgado para usar '{tool}' en este momento."}
         if policy["reason"] == "riesgo_bloqueado":
-            return {"reply": "Esa acción está bloqueada por su nivel de riesgo."}
-        return {"reply": "No encontré una acción para hacer eso todavía."}
+            return {"type": "denied", "reply": "Esa acción está bloqueada por su nivel de riesgo."}
+        return {"type": "denied", "reply": "No encontré una acción para hacer eso todavía."}
 
     params = decision.get("params", {})
 
     if policy["allowed"] == "requiere_confirmacion":
         summary = _summarize_action(tool, params)
         pending.save_pending(msg.internal_user_id, tool, params, summary)
-        return {"reply": f"¿Confirmás esta acción? {summary} Respondé 'sí' o 'no'."}
+        return {
+            "type": "confirmation",
+            "reply": f"¿Confirmás esta acción? {summary} Respondé 'sí' o 'no'.",
+            "summary": summary,
+        }
 
     if tool == "chat":
         answer = params.get("answer", "¡Hola! ¿En qué puedo ayudarte?")
-        return {"reply": answer}
+        return {"type": "info", "reply": answer}
 
     return await _execute_tool(tool, params, msg.internal_user_id)
