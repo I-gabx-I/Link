@@ -1,0 +1,3 @@
+-r gateway/requirements.txt
+-r orchestrator/requirements.txt
+-r agents/agent_telegram/requirements.txt

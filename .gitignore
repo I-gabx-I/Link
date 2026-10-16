@@ -23,6 +23,9 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Local demo runtime and Python environment.
+.runtime/
+
 # Logs del LLM (contienen mensajes de usuarios, no se suben)
 logs/*
 !logs/.gitkeep

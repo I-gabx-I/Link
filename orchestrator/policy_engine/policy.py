@@ -5,8 +5,9 @@ from firebase_admin import credentials, firestore
 cred_path = os.getenv("FIREBASE_CREDENTIALS_PATH")
 
 if not firebase_admin._apps:
-    cred = credentials.Certificate(cred_path)
-    firebase_admin.initialize_app(cred)
+    cred = credentials.Certificate(cred_path) if cred_path else None
+    options = {"projectId": os.environ["FIREBASE_PROJECT_ID"]} if os.getenv("FIREBASE_PROJECT_ID") else None
+    firebase_admin.initialize_app(cred, options=options)
 
 db = firestore.client()
 
@@ -18,6 +19,7 @@ RISK_LEVELS = {
     "calendar_create": 3,
     "file_read": 0,
     "contact_add": 0,
+    "contact_list": 0,
     "telegram_send": 3,
 }
 

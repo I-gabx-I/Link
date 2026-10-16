@@ -1,5 +1,7 @@
 # Link — Asistente Personal Multi-Agente
 
+La demo Android se trabaja desde `android/`. Consulta [DEMO_ANDROID.md](docs/DEMO_ANDROID.md) para abrir el proyecto en Android Studio, configurar el backend local y probar el recorrido de voz → Gemini → confirmación → Telegram.
+
 Sistema distribuido que orquesta múltiples agentes de IA para automatizar tareas cotidianas (calendario, mensajes, archivos, trámites académicos) a través de una interfaz conversacional, con un modelo de seguridad basado en permisos, niveles de riesgo y auditoría.
 
 Proyecto de Seminario Profesional — ver `docs/` para la documentación completa de arquitectura (MD0-MD3).

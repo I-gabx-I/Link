@@ -85,7 +85,7 @@ fun DashboardScreen(
                 }
             }
             Spacer(Modifier.height(12.dp))
-            Text("LINK está listo para ayudar cuando Don Carlos lo necesite.", color = LinkMuted, style = MaterialTheme.typography.bodyMedium)
+            Text("Guardian está listo para ayudar cuando Don Carlos lo necesite.", color = LinkMuted, style = MaterialTheme.typography.bodyMedium)
         }
         Spacer(Modifier.height(14.dp))
 
@@ -211,7 +211,7 @@ fun PauseAssistantScreen(
                     )
                 }
                 Spacer(Modifier.height(16.dp))
-                Text(if (paused) "LINK está en pausa" else "LINK está activo", style = MaterialTheme.typography.titleLarge)
+                Text(if (paused) "Guardian está en pausa" else "Guardian está activo", style = MaterialTheme.typography.titleLarge)
                 Spacer(Modifier.height(8.dp))
                 Text(
                     if (paused) "Don Carlos no podrá usarlo hasta que lo reactives."

@@ -1,4 +1,8 @@
 CAPABILITIES = {
+    "contact_list": {
+        "description": "Lista los contactos guardados del usuario.",
+        "params": []
+    },
     "contact_add": {
         "description": "Guarda un contacto nuevo (nombre + usuario de Telegram). Fase 4.",
         "params": ["name", "username"]

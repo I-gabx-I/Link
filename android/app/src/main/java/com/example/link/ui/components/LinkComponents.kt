@@ -1,5 +1,6 @@
 package com.example.link.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -46,11 +47,15 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.link.R
+import com.example.link.ui.theme.GuardianCard
 import com.example.link.ui.theme.LinkBackground
 import com.example.link.ui.theme.LinkBlue
 import com.example.link.ui.theme.LinkBlueSoft
@@ -84,9 +89,17 @@ fun LinkIcon(
         val stroke = Stroke(width = sw, cap = StrokeCap.Round)
         when (type) {
             LinkIconType.Logo -> {
-                drawArc(color, 28f, 230f, false, Offset(w * .20f, h * .20f), Size(w * .60f, h * .60f), style = stroke)
-                drawCircle(color, w * .07f, Offset(w * .68f, h * .25f))
-                drawCircle(color, w * .07f, Offset(w * .31f, h * .75f))
+                val shield = Path().apply {
+                    moveTo(w * .5f, h * .08f)
+                    cubicTo(w * .38f, h * .18f, w * .25f, h * .08f, w * .18f, h * .22f)
+                    cubicTo(w * .12f, h * .48f, w * .24f, h * .72f, w * .5f, h * .92f)
+                    cubicTo(w * .76f, h * .72f, w * .88f, h * .48f, w * .82f, h * .22f)
+                    cubicTo(w * .75f, h * .08f, w * .62f, h * .18f, w * .5f, h * .08f)
+                    close()
+                }
+                drawPath(shield, color, style = stroke)
+                drawLine(color, Offset(w * .5f, h * .25f), Offset(w * .5f, h * .72f), sw, StrokeCap.Round)
+                drawLine(color, Offset(w * .31f, h * .49f), Offset(w * .69f, h * .49f), sw, StrokeCap.Round)
             }
             LinkIconType.Microphone -> {
                 drawRoundRect(color, Offset(w * .34f, h * .12f), Size(w * .32f, h * .50f), cornerRadius = androidx.compose.ui.geometry.CornerRadius(w * .17f), style = stroke)
@@ -176,14 +189,15 @@ fun LinkIcon(
 @Composable
 fun LinkLogo(modifier: Modifier = Modifier, roleLabel: String? = null) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-        Box(
-            modifier = Modifier.size(34.dp).background(LinkBlue, CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            LinkIcon(LinkIconType.Logo, "Logo de LINK", Modifier.size(22.dp), Color.White, 2.dp)
-        }
-        Spacer(Modifier.width(9.dp))
-        Text("LINK", color = LinkInk, fontWeight = FontWeight.ExtraBold, fontSize = 20.sp)
+        LinkIcon(LinkIconType.Logo, "Guardian", Modifier.size(40.dp), LinkBlue)
+        Spacer(Modifier.width(8.dp))
+        Text(
+            "GUARDIAN",
+            color = LinkInk,
+            fontFamily = FontFamily.Serif,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
+        )
         if (roleLabel != null) {
             Spacer(Modifier.weight(1f))
             Text(roleLabel, color = LinkMuted, style = MaterialTheme.typography.labelMedium)
@@ -316,7 +330,7 @@ fun LinkCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = GuardianCard),
         border = androidx.compose.foundation.BorderStroke(1.dp, LinkBorder),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {

@@ -33,3 +33,16 @@ def classify_confirmation(message: str) -> str:
     if normalized in NEGATIVE:
         return "no"
     return "unclear"
+
+
+def save_draft(internal_user_id: str, decision: dict):
+    db.collection("draft_actions").document(internal_user_id).set(decision)
+
+
+def get_draft(internal_user_id: str):
+    doc = db.collection("draft_actions").document(internal_user_id).get()
+    return doc.to_dict() if doc.exists else None
+
+
+def clear_draft(internal_user_id: str):
+    db.collection("draft_actions").document(internal_user_id).delete()

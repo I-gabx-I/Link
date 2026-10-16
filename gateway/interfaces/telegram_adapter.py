@@ -6,10 +6,12 @@ from identity import resolve_user
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 ORCHESTRATOR_URL = os.getenv("ORCHESTRATOR_URL", "http://orchestrator:8001")
 
-bot = Bot(token=TOKEN)
+bot = Bot(token=TOKEN) if TOKEN else None
 
 
 async def handle_update(data: dict):
+    if bot is None:
+        return
     update = Update.de_json(data, bot)
 
     if not (update.message and update.message.text):

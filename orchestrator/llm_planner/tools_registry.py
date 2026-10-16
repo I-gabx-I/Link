@@ -1,3 +1,5 @@
+import os
+
 AVAILABLE_TOOLS = [
     {
         "name": "echo",
@@ -33,9 +35,17 @@ AVAILABLE_TOOLS = [
         "description": "Guarda un contacto nuevo para poder enviarle mensajes después. Requiere params: 'name' (cómo lo va a llamar el usuario) y 'username' (su usuario de Telegram, sin el @).",
     },
     {
+        "name": "contact_list",
+        "description": "Lista los contactos que el usuario ya tiene guardados. No requiere parámetros.",
+    },
+    {
         "name": "telegram_send",
         "description": "Genera un link para enviarle un mensaje a un contacto YA GUARDADO por Telegram. Requiere params: 'contact' (el nombre guardado) y 'message' (el texto). Si el contacto no está guardado, primero hay que usar 'contact_add'.",
     },
 
 
 ]
+
+if os.getenv("ENABLED_TOOLS"):
+    enabled = {tool.strip() for tool in os.environ["ENABLED_TOOLS"].split(",")}
+    AVAILABLE_TOOLS = [tool for tool in AVAILABLE_TOOLS if tool["name"] in enabled]
