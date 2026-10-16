@@ -1,0 +1,567 @@
+Quiero que conviertas la versión actual de nuestro mockup Android de GUARDIAN en una primera versión funcional.
+
+IMPORTANTE:
+En esta primera etapa NO debes conectar todavía el backend, Telegram, WhatsApp, Firebase ni ninguna API externa.
+
+El objetivo de esta iteración es únicamente:
+
+1. Revisar y mejorar la interfaz aplicando el branding de Guardian.
+2. Convertir el botón principal de micrófono en reconocimiento de voz REAL utilizando las capacidades nativas de Android.
+3. Mantener el resto del mockup y navegación existentes sin romperlos.
+
+==================================================
+ANTES DE MODIFICAR NADA
+==================================================
+
+Primero inspecciona completamente el proyecto Android actual.
+
+Necesito que determines:
+
+- si está usando Jetpack Compose o XML;
+- cómo está organizada la navegación;
+- qué pantallas existen;
+- dónde está implementado actualmente el Home del adulto mayor;
+- dónde está el botón de micrófono;
+- qué Theme/colores/tipografías existen;
+- si hay ViewModels o alguna arquitectura existente;
+- qué permisos ya existen en AndroidManifest.xml;
+- qué versión mínima y target SDK utiliza el proyecto.
+
+NO reemplaces la arquitectura actual solo porque prefieras otra.
+
+Mantén la tecnología y estructura existentes siempre que sea razonable.
+
+Antes de implementar, dame un resumen corto de:
+- qué encontraste;
+- qué archivos piensas modificar;
+- cómo implementarás SpeechRecognizer.
+
+Después continúa directamente con la implementación.
+No te detengas esperando confirmación.
+
+==================================================
+CONTEXTO DE GUARDIAN
+==================================================
+
+GUARDIAN es una aplicación móvil orientada principalmente a adultos mayores y personas con dificultades para utilizar herramientas digitales.
+
+La experiencia diaria debe ser extremadamente simple.
+
+El usuario mayor debe poder abrir la aplicación y encontrar rápidamente una acción principal:
+
+HABLAR.
+
+El proyecto también contempla configuración por familiares/cuidadores, pero esta iteración debe priorizar las pantallas principales del adulto mayor.
+
+No existe un Figma definitivo que deba copiarse pixel-perfect.
+
+Tienes libertad razonable para mejorar visualmente la interfaz actual, siempre que mantengas:
+
+- accesibilidad;
+- simplicidad;
+- claridad;
+- identidad de Guardian;
+- navegación existente.
+
+==================================================
+BRANDING DE GUARDIAN
+==================================================
+
+Busca dentro del proyecto los archivos de branding y el manual de marca si están disponibles.
+
+Usa estas reglas como fuente práctica para la interfaz:
+
+Primary:
+#BD5F3E
+
+Secondary:
+#D97968
+
+Accent:
+#F0AE8A
+
+Cream:
+#FFF2D8
+
+TextPrimary:
+#513528
+
+Background principal:
+preferiblemente blanco o casi blanco.
+
+NO quiero que toda la aplicación tenga fondo crema.
+
+El crema debe utilizarse principalmente en:
+- cards;
+- superficies secundarias;
+- pequeños acentos.
+
+El terracota debe utilizarse principalmente para:
+- acciones principales;
+- botón del micrófono;
+- elementos activos;
+- pequeños detalles importantes.
+
+El coral y melocotón deben utilizarse como acentos secundarios.
+
+El café oscuro debe utilizarse para:
+- títulos;
+- texto principal;
+- iconografía cuando corresponda.
+
+No utilizar la mascota.
+
+==================================================
+ESTILO VISUAL
+==================================================
+
+Guardian debe sentirse:
+
+- cálido;
+- tranquilo;
+- confiable;
+- moderno;
+- accesible;
+- amigable.
+
+NO debe parecer:
+
+- aplicación médica;
+- hospital;
+- dashboard empresarial;
+- aplicación infantil.
+
+Usar:
+
+- bordes redondeados;
+- mucho espacio entre elementos;
+- sombras muy suaves si son necesarias;
+- texto grande;
+- alto contraste;
+- botones amplios;
+- jerarquía visual evidente.
+
+La interfaz debe ser especialmente cómoda para adultos mayores.
+
+No uses elementos pequeños solamente para ahorrar espacio.
+
+No dependas únicamente del color para indicar estados.
+
+==================================================
+THEME
+==================================================
+
+Centraliza los colores del branding.
+
+Si el proyecto usa Jetpack Compose, usa el Theme existente y modifica/crea archivos apropiados como:
+
+Color.kt
+Theme.kt
+Type.kt
+
+o su equivalente actual.
+
+NO escribas hex colors repetidos directamente dentro de cada pantalla.
+
+Quiero poder modificar posteriormente el branding desde pocos archivos.
+
+Reutiliza componentes cuando sea razonable.
+
+==================================================
+PANTALLA HOME
+==================================================
+
+La Home del adulto mayor debe ser una de las pantallas más cuidadas.
+
+Puedes mejorar la versión actual siempre que conserve su intención.
+
+Estructura aproximada:
+
+GUARDIAN / logo discreto
+
+"Buenas tardes"
+"Don Carlos"
+
+"¿En qué puedo ayudarte?"
+
+Elemento dominante:
+
+BOTÓN GRANDE DE MICRÓFONO
+
+Debajo:
+
+"HABLAR"
+
+Puede existir una pequeña sección secundaria con ejemplos:
+
+Puedes decir:
+"Llama a María"
+"Recuérdame mi cita"
+
+No sobrecargues esta pantalla.
+
+El micrófono debe ser claramente la acción principal.
+
+==================================================
+RECONOCIMIENTO DE VOZ
+==================================================
+
+Implementa reconocimiento de voz utilizando Android SpeechRecognizer.
+
+NO usar:
+- OpenAI Whisper;
+- Google Cloud Speech API;
+- servicios externos;
+- APIs pagadas.
+
+Usar reconocimiento nativo Android para este MVP.
+
+Debes:
+
+1. Añadir el permiso necesario:
+
+android.permission.RECORD_AUDIO
+
+2. Solicitar el permiso en tiempo de ejecución correctamente.
+
+3. Comprobar si SpeechRecognizer está disponible antes de utilizarlo.
+
+4. Crear y gestionar correctamente el SpeechRecognizer.
+
+5. Utilizar RecognizerIntent para reconocimiento de voz.
+
+6. Configurar lenguaje español.
+
+Preferencia inicial:
+
+es-GT
+
+Si consideras que existe un motivo técnico para usar:
+
+es-ES
+o el locale del dispositivo,
+
+documenta brevemente la decisión.
+
+7. Habilitar resultados parciales si son compatibles.
+
+8. Mostrar el texto reconocido progresivamente cuando sea posible.
+
+9. Mostrar claramente el resultado final.
+
+10. Manejar errores razonablemente.
+
+==================================================
+ESTADOS DE LA INTERFAZ
+==================================================
+
+Necesito al menos estos estados:
+
+IDLE
+
+Pantalla normal.
+Botón grande:
+
+HABLAR
+
+------------------------------------------
+
+LISTENING
+
+Cuando el usuario toca el micrófono:
+
+mostrar algo como:
+
+"Te estoy escuchando..."
+
+Mantener un icono grande de micrófono.
+
+Agregar una animación sencilla si es fácil y no requiere dependencias externas innecesarias.
+
+Puede ser:
+- pulso;
+- ondas;
+- cambio suave de tamaño/opacidad.
+
+Mostrar resultados parciales debajo si existen.
+
+Ejemplo:
+
+"Llama a mi hija..."
+
+------------------------------------------
+
+PROCESSING / RESULT
+
+Cuando Android termine de escuchar:
+
+mostrar:
+
+"Entendido"
+
+y debajo el texto detectado.
+
+Ejemplo:
+
+"Llama a mi hija María"
+
+En esta iteración NO enviar ese texto al backend.
+
+Solo conservarlo en estado para utilizarlo en el siguiente paso del proyecto.
+
+Añadir una acción sencilla como:
+
+"Continuar"
+
+que por ahora puede llevar a la pantalla de confirmación existente o mostrar el resultado.
+
+Si ya existe ConfirmationScreen, reutilízala.
+
+------------------------------------------
+
+ERROR
+
+Si falla el reconocimiento:
+
+mostrar un mensaje entendible para una persona normal.
+
+Ejemplos:
+
+"No pude escucharte. Intenta nuevamente."
+
+"Necesito permiso para usar el micrófono."
+
+"El reconocimiento de voz no está disponible en este dispositivo."
+
+NO mostrar códigos técnicos de SpeechRecognizer directamente al usuario.
+
+Puedes registrar detalles técnicos en Logcat.
+
+==================================================
+BOTÓN DE MICRÓFONO
+==================================================
+
+El botón debe tener comportamiento real.
+
+Estado IDLE:
+
+tap -> empieza a escuchar.
+
+Estado LISTENING:
+
+el usuario debe poder cancelar si es necesario.
+
+Después de obtener resultado:
+
+guardar el texto reconocido.
+
+Evita crear múltiples SpeechRecognizer simultáneamente si el usuario toca varias veces.
+
+Evita iniciar otra escucha mientras ya existe una activa.
+
+==================================================
+LIFECYCLE
+==================================================
+
+Gestiona correctamente el lifecycle.
+
+Muy importante:
+
+- detener reconocimiento cuando corresponda;
+- liberar SpeechRecognizer al destruir la pantalla/activity;
+- llamar destroy() correctamente;
+- evitar memory leaks;
+- evitar listeners activos después de abandonar la pantalla.
+
+Si usamos Compose, integra esto apropiadamente con DisposableEffect o con la arquitectura existente.
+
+Si ya existe un ViewModel adecuado, puedes separar ahí el estado.
+
+No sobrearquitectures solamente por hacerlo "perfecto".
+
+==================================================
+ACCESIBILIDAD
+==================================================
+
+Prioridad alta.
+
+Asegúrate de que:
+
+- el botón del micrófono tenga contentDescription;
+- botones e iconos tengan descripciones cuando sea necesario;
+- áreas táctiles sean grandes;
+- textos sean legibles;
+- los controles importantes no sean diminutos;
+- confirmaciones sean fáciles de entender;
+- haya buen contraste.
+
+No uses frases técnicas como:
+
+"SpeechRecognizer unavailable".
+
+Mostrar:
+
+"El reconocimiento de voz no está disponible en este dispositivo."
+
+==================================================
+PANTALLA LISTENING
+==================================================
+
+Si actualmente existe una ListeningScreen, mejórala.
+
+Si no existe, créala o implementa el estado dentro de la estructura existente de la forma que mejor encaje con el proyecto.
+
+Visual aproximado:
+
+        [micrófono]
+
+   Te estoy escuchando...
+
+        ondas/pulso
+
+   "Llama a mi hija María"
+
+       [Cancelar]
+
+Debe conservar el branding de Guardian.
+
+==================================================
+PANTALLA CONFIRMATION
+==================================================
+
+No necesitamos todavía una integración real.
+
+Si ya existe ConfirmationScreen, asegúrate de que pueda recibir el texto reconocido.
+
+Ejemplo:
+
+"¿Quieres continuar?"
+
+[ texto reconocido ]
+
+"Llama a mi hija María"
+
+[ Continuar ]
+
+[ Cancelar ]
+
+Por ahora:
+
+Continuar:
+puede mostrar un estado de demo o conservar el texto.
+
+Cancelar:
+regresa a Home.
+
+NO conectar todavía Telegram.
+
+La siguiente iteración hará esa integración.
+
+==================================================
+ESTRUCTURA DEL CÓDIGO
+==================================================
+
+No pongas toda la lógica de reconocimiento dentro de un único Composable gigante.
+
+Si el proyecto usa Compose y no existe todavía una solución adecuada, puedes crear algo parecido a:
+
+speech/
+    SpeechRecognizerManager.kt
+
+ui/
+    screens/
+    components/
+
+pero adapta estos nombres a la estructura REAL del proyecto.
+
+El manager/controlador de voz debería encargarse de:
+
+- iniciar reconocimiento;
+- detenerlo;
+- recibir callbacks;
+- convertir callbacks en estados comprensibles para UI;
+- limpiar recursos.
+
+La UI debe consumir esos estados.
+
+Pero NO introduzcas:
+- Clean Architecture completa;
+- Hilt;
+- Repository layers;
+- UseCases;
+- nuevas librerías grandes;
+
+si el proyecto todavía no las usa.
+
+==================================================
+NO HACER TODAVÍA
+==================================================
+
+NO implementar todavía:
+
+- llamadas HTTP al backend;
+- Orchestrator;
+- Telegram;
+- WhatsApp;
+- Firebase Auth;
+- contactos reales;
+- Calendar;
+- APIs externas;
+- envío real de mensajes.
+
+Esta iteración termina cuando:
+
+1. La app abre correctamente.
+2. Home utiliza branding Guardian.
+3. El botón de micrófono funciona.
+4. Android solicita permiso del micrófono correctamente.
+5. El usuario puede hablar.
+6. La app muestra lo que entendió.
+7. El estado visual cambia correctamente entre Idle, Listening y Result.
+8. El texto reconocido queda disponible para la siguiente pantalla/paso.
+9. La navegación actual sigue funcionando.
+10. El proyecto compila.
+
+==================================================
+VALIDACIÓN
+==================================================
+
+Después de implementar:
+
+1. Ejecuta la compilación Gradle correspondiente.
+2. Corrige todos los errores de compilación.
+3. Revisa warnings importantes relacionados con lo que modificaste.
+4. Verifica imports.
+5. Verifica AndroidManifest.
+6. Verifica permisos.
+7. Verifica navegación.
+8. No dejes TODOs necesarios para que esta funcionalidad opere.
+9. No elimines pantallas existentes sin necesidad.
+10. No modifiques partes del backend.
+
+Si es posible desde tu entorno, ejecuta la aplicación o las pruebas disponibles.
+
+==================================================
+RESULTADO FINAL
+==================================================
+
+Cuando termines dime:
+
+- qué archivos modificaste;
+- qué archivos creaste;
+- cómo funciona ahora el reconocimiento;
+- cómo probarlo paso a paso;
+- qué comportamiento tiene si se rechaza el permiso;
+- qué comportamiento tiene si el reconocimiento falla;
+- dónde queda almacenado el texto reconocido;
+- qué queda pendiente para conectar posteriormente el backend.
+
+También indícame cualquier limitación relevante que hayas encontrado en el dispositivo/emulador.
+
+
+xfavor has un archivo resumiendo tu progreso para q la proxima vez que usemos el codex tengamos el contexto de que hicimos
+
+ademas como una aclaracion, si es necesario y vez que realmente el branding y los colores no estan muy concordes, puedes dejarlo en un soolo color mas especifico que se vea bien
+lo ultimo que queremos es que se vea rosadito con cafe o algo por el estilo y no quede para nada bien, la estetica si se complica dejala simple pero bonita
+
+lee los archivos que te deja en la misma carpeta de sampledata para que puedas apoyarte

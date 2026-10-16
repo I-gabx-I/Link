@@ -62,12 +62,12 @@ fun AccountTypeScreen(onContinue: () -> Unit) {
     SetupScaffold(
         step = 1,
         title = "¿Para quién es esta cuenta?",
-        subtitle = "Elige cómo quieres configurar LINK.",
+        subtitle = "Elige cómo quieres configurar Guardian.",
         onContinue = onContinue
     ) {
         ChoiceCard(
             title = "Para un familiar",
-            description = "Configuraré LINK para acompañar a un ser querido.",
+            description = "Configuraré Guardian para acompañar a un ser querido.",
             icon = LinkIconType.Person,
             selected = selected == "familiar",
             onClick = { selected = "familiar" }
@@ -75,7 +75,7 @@ fun AccountTypeScreen(onContinue: () -> Unit) {
         Spacer(Modifier.height(12.dp))
         ChoiceCard(
             title = "Para mí",
-            description = "Usaré LINK en este teléfono.",
+            description = "Usaré Guardian en este teléfono.",
             icon = LinkIconType.Logo,
             selected = selected == "propia",
             onClick = { selected = "propia" }
@@ -126,7 +126,7 @@ fun SeniorDataScreen(onBack: () -> Unit, onContinue: () -> Unit) {
     SetupScaffold(
         step = 2,
         title = "Datos del adulto mayor",
-        subtitle = "Estos datos ayudan a que LINK se dirija a él de forma cercana.",
+        subtitle = "Estos datos ayudan a que Guardian se dirija a él de forma cercana.",
         continueText = "Guardar y continuar",
         onContinue = onContinue,
         onBack = onBack
@@ -160,7 +160,7 @@ fun ContactsScreen(onBack: () -> Unit, onContinue: () -> Unit) {
     SetupScaffold(
         step = 3,
         title = "Contactos importantes",
-        subtitle = "LINK podrá ayudar a Don Carlos a llamar o escribir a estas personas.",
+        subtitle = "Guardian podrá ayudar a Don Carlos a llamar o escribir a estas personas.",
         onContinue = onContinue,
         onBack = onBack
     ) {
@@ -192,7 +192,7 @@ fun AppsScreen(onBack: () -> Unit, onContinue: () -> Unit) {
     SetupScaffold(
         step = 4,
         title = "Aplicaciones",
-        subtitle = "Elige qué herramientas podrá usar LINK para ayudar a Don Carlos.",
+        subtitle = "Elige qué herramientas podrá usar Guardian para ayudar a Don Carlos.",
         onContinue = onContinue,
         onBack = onBack
     ) {
@@ -222,7 +222,7 @@ fun PermissionsScreen(onBack: () -> Unit, onContinue: () -> Unit) {
     SetupScaffold(
         step = 5,
         title = "Permisos del asistente",
-        subtitle = "Reglas simples para que LINK ayude con claridad y siempre bajo control.",
+        subtitle = "Reglas simples para que Guardian ayude con claridad y siempre bajo control.",
         onContinue = onContinue,
         onBack = onBack
     ) {

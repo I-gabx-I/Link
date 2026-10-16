@@ -1,6 +1,9 @@
 package com.example.link.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -41,6 +44,8 @@ private object Routes {
 
 @Composable
 fun LinkApp(navController: NavHostController = rememberNavController()) {
+    var recognizedText by rememberSaveable { androidx.compose.runtime.mutableStateOf("") }
+
     NavHost(navController = navController, startDestination = Routes.AccountType) {
         composable(Routes.AccountType) {
             AccountTypeScreen(onContinue = { navController.navigate(Routes.SeniorData) })
@@ -113,18 +118,23 @@ fun LinkApp(navController: NavHostController = rememberNavController()) {
         }
         composable(Routes.SeniorHome) {
             SeniorHomeScreen(
-                onListen = { navController.navigate(Routes.Listening) },
+                onListen = {
+                    recognizedText = ""
+                    navController.navigate(Routes.Listening)
+                },
                 onCaregiverMode = { navController.returnTo(Routes.Dashboard) }
             )
         }
         composable(Routes.Listening) {
             ListeningScreen(
                 onBack = { navController.popBackStack() },
+                onRecognizedText = { recognizedText = it },
                 onContinue = { navController.navigate(Routes.Confirmation) }
             )
         }
         composable(Routes.Confirmation) {
             ConfirmationScreen(
+                recognizedText = recognizedText,
                 onBack = { navController.popBackStack() },
                 onCancel = { navController.returnTo(Routes.SeniorHome) },
                 onDone = { navController.returnTo(Routes.SeniorHome) }
