@@ -1,0 +1,34 @@
+package com.example.link.ui.theme
+
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+
+private val LightColorScheme = lightColorScheme(
+    primary = LinkBlue,
+    onPrimary = LinkSurface,
+    primaryContainer = LinkBlueSoft,
+    onPrimaryContainer = LinkInk,
+    secondary = LinkSuccess,
+    onSecondary = LinkSurface,
+    error = LinkDanger,
+    onError = LinkSurface,
+    background = LinkBackground,
+    onBackground = LinkInk,
+    surface = LinkSurface,
+    onSurface = LinkInk,
+    surfaceVariant = LinkBlueSoft,
+    onSurfaceVariant = LinkMuted,
+    outline = LinkBorder
+)
+
+@Composable
+fun LinkTheme(
+    content: @Composable () -> Unit
+) {
+    MaterialTheme(
+        colorScheme = LightColorScheme,
+        typography = Typography,
+        content = content
+    )
+}
