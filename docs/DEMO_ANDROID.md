@@ -68,6 +68,8 @@ Inicia los tres servicios:
 
 El lanzador comprueba la configuración, arranca el agente de Telegram en el puerto 8006 y el orquestador en el 8001, ambos accesibles solo desde esta computadora. El gateway escucha en el puerto 8000 para permitir la conexión del teléfono. Mantén abierta la terminal; Ctrl+C detiene los tres procesos.
 
+Inicia el backend una sola vez. Si los puertos 8000, 8001 o 8006 ya estan ocupados, el lanzador se detiene antes de crear procesos y muestra **No inicié otra copia**. Si ya dejaste Link encendido, continua con la utilidad USB y la app. Para reiniciar, presiona Ctrl+C en la terminal original y ejecuta el lanzador de nuevo. No cierres indiscriminadamente todos los procesos de Python.
+
 El primer arranque puede tardar mientras se cargan las dependencias. El lanzador espera hasta 180 segundos por servicio y avisa cuál está iniciando. Si un servicio se cierra, muestra el fallo de inmediato.
 
 Para este recorrido no necesitas configurar un bot de Telegram. La acción utiliza la cuenta personal que ya tiene abierta la app Telegram del teléfono.
