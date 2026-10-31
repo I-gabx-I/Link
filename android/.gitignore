@@ -1,0 +1,16 @@
+# Gradle / Android Studio (se regeneran solos)
+.gradle/
+.kotlin/
+build/
+local.properties
+*.iml
+.idea/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Secretos de Android (nunca se suben)
+google-services.json
+keystore.properties
+*.jks
+*.keystore
