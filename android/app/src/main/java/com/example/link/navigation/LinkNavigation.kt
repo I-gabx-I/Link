@@ -1,20 +1,23 @@
 package com.example.link.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.link.GuardianApplication
-import com.example.link.ui.screens.connection.ConnectionScreen
-import com.example.link.ui.screens.connection.ConnectionViewModel
 import com.example.link.ui.screens.assistant.AssistantScreen
 import com.example.link.ui.screens.assistant.AssistantViewModel
 import com.example.link.ui.screens.caregiver.DashboardScreen
 import com.example.link.ui.screens.caregiver.PauseAssistantScreen
 import com.example.link.ui.screens.caregiver.SettingsScreen
+import com.example.link.ui.screens.connection.ConnectionScreen
+import com.example.link.ui.screens.connection.ConnectionViewModel
+import com.example.link.ui.screens.login.LoginScreen
+import com.example.link.ui.screens.login.LoginViewModel
 import com.example.link.ui.screens.senior.ConfirmationScreen
 import com.example.link.ui.screens.senior.ListeningScreen
 import com.example.link.ui.screens.senior.SeniorHomeScreen
@@ -29,6 +32,7 @@ import com.example.link.ui.screens.setup.PermissionsSettingsScreen
 import com.example.link.ui.screens.setup.SeniorDataScreen
 
 private object Routes {
+    const val Login = "auth/login"
     const val AccountType = "setup/account-type"
     const val SeniorData = "setup/senior-data"
     const val Contacts = "setup/contacts"
@@ -50,7 +54,23 @@ private object Routes {
 
 @Composable
 fun LinkApp(navController: NavHostController = rememberNavController()) {
-    NavHost(navController = navController, startDestination = Routes.AccountType) {
+    val app = LocalContext.current.applicationContext as GuardianApplication
+    val startDestination = remember {
+        if (app.authRepository.isSignedIn) Routes.AccountType else Routes.Login
+    }
+
+    NavHost(navController = navController, startDestination = startDestination) {
+        composable(Routes.Login) {
+            val loginViewModel: LoginViewModel = viewModel { LoginViewModel(app.authRepository) }
+            LoginScreen(
+                viewModel = loginViewModel,
+                onLoggedIn = {
+                    navController.navigate(Routes.AccountType) {
+                        popUpTo(Routes.Login) { inclusive = true }
+                    }
+                }
+            )
+        }
         composable(Routes.AccountType) {
             AccountTypeScreen(onContinue = { navController.navigate(Routes.SeniorData) })
         }
@@ -103,11 +123,16 @@ fun LinkApp(navController: NavHostController = rememberNavController()) {
                 onApps = { navController.navigate(Routes.SettingsApps) },
                 onPermissions = { navController.navigate(Routes.SettingsPermissions) },
                 onSeniorMode = { navController.navigateSingle(Routes.SeniorHome) },
-                onConnection = { navController.navigate(Routes.Connection) }
+                onConnection = { navController.navigate(Routes.Connection) },
+                onLogout = {
+                    app.authRepository.signOut()
+                    navController.navigate(Routes.Login) {
+                        popUpTo(navController.graph.id) { inclusive = true }
+                    }
+                }
             )
         }
         composable(Routes.Connection) {
-            val app = LocalContext.current.applicationContext as GuardianApplication
             val connectionViewModel: ConnectionViewModel = viewModel {
                 ConnectionViewModel(app.connectionStore, app.repository)
             }
@@ -136,7 +161,6 @@ fun LinkApp(navController: NavHostController = rememberNavController()) {
             )
         }
         composable(Routes.Assistant) {
-            val app = LocalContext.current.applicationContext as GuardianApplication
             val assistantViewModel: AssistantViewModel = viewModel {
                 AssistantViewModel(app.repository)
             }

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.google.services)
 }
 
 val localProperties = Properties().apply {
@@ -18,7 +19,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.link"
+        applicationId = "gt.guardian.asistente"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -62,6 +63,8 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.androidx.navigation.compose)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
