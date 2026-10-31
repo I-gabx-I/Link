@@ -147,7 +147,8 @@ fun SettingsScreen(
     onContacts: () -> Unit,
     onApps: () -> Unit,
     onPermissions: () -> Unit,
-    onSeniorMode: () -> Unit
+    onSeniorMode: () -> Unit,
+    onConnection: () -> Unit
 ) {
     CaregiverPage(
         current = "settings",
@@ -167,6 +168,8 @@ fun SettingsScreen(
         SettingRow(LinkIconType.Apps, "Aplicaciones", "Herramientas disponibles", onApps)
         Spacer(Modifier.height(10.dp))
         SettingRow(LinkIconType.Lock, "Permisos", "Control antes de actuar", onPermissions)
+        Spacer(Modifier.height(10.dp))
+        SettingRow(LinkIconType.Settings, "Conexión del asistente", "Dirección y clave del backend", onConnection)
         Spacer(Modifier.height(24.dp))
         Text("EXPERIENCIA", color = LinkMuted, style = MaterialTheme.typography.labelMedium)
         Spacer(Modifier.height(10.dp))

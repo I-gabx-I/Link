@@ -62,6 +62,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun SeniorHomeScreen(
     onListen: () -> Unit,
+    onWrite: () -> Unit,
     onCaregiverMode: () -> Unit
 ) {
     Column(
@@ -91,6 +92,8 @@ fun SeniorHomeScreen(
             }
             Spacer(Modifier.height(28.dp))
             PrimaryButton("HABLAR", onListen, Modifier.height(66.dp), leadingIcon = LinkIconType.Microphone)
+            Spacer(Modifier.height(12.dp))
+            SecondaryButton("Escribir una solicitud", onWrite, Modifier.height(60.dp))
             Spacer(Modifier.height(26.dp))
             Text("Puedes decir:", style = MaterialTheme.typography.titleMedium)
             Spacer(Modifier.height(10.dp))

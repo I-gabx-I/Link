@@ -21,7 +21,7 @@ El MD 2 sigue siendo válido como historial. Sus Fases 0 a 4 están terminadas y
 
 | Fase | Nombre | Origen (MD 2) | Estado | Rama |
 |---|---|---|---|---|
-| P1 | Base de la app | Fase 8 | Pendiente | `fase-app-android` (ya existe) |
+| P1 | Base de la app | Fase 8 | Terminada y probada | `fase-app-android` (ya existe) |
 | P2 | Cuentas y autenticación | Fase 7 | Pendiente | `p2-cuentas-auth` |
 | P3 | Servicios | Fase 4 ampliada | Pendiente | `p3-servicios` |
 | P4 | Supervisión | Fase 5 | Pendiente | `p4-supervision` |
@@ -44,11 +44,30 @@ El MD 2 sigue siendo válido como historial. Sus Fases 0 a 4 están terminadas y
 - **Secreto compartido temporal.** Se usa `APP_SHARED_SECRET` mientras tanto; P2 lo reemplaza.
 
 **Definición de Terminado:**
-- [ ] El inventario de pantallas está documentado: qué se usa y qué se eliminó.
-- [ ] La app envía una solicitud escrita y muestra la respuesta del backend según su `type`.
-- [ ] El flujo de confirmación funciona desde la app: pantalla de confirmación → sí/no → resultado.
-- [ ] Ninguna pantalla llama a la red directamente; todo pasa por ViewModel y Repository.
-- [ ] La dirección del backend se configura sin recompilar la app.
+- [X] El inventario de pantallas está documentado: qué se usa y qué se eliminó.
+- [X] La app envía una solicitud escrita y muestra la respuesta del backend según su `type`.
+- [X] El flujo de confirmación funciona desde la app: pantalla de confirmación → sí/no → resultado.
+- [X] Ninguna pantalla llama a la red directamente; todo pasa por ViewModel y Repository.
+- [X] La dirección del backend se configura sin recompilar la app.
+
+**Resultado del inventario (29 de octubre):**
+- **Se quedan todas las pantallas del mockup**, porque casi todas corresponden a algo del backend:
+  - "Aplicaciones" = `granted_tools`;
+  - "Permisos" = los niveles de riesgo (0 a 2 directo, 3 y 4 con confirmación, 5 bloqueado);
+  - "Pausar asistente" = kill switch (P4);
+  - "Escuchando" = voz (P5).
+- **No se eliminó ninguna pantalla.** Los datos fijos ("Don Carlos", "María") se reemplazan por datos reales en P2.
+- **Se agregaron:**
+  - "Escribir una solicitud": la solicitud y la respuesta según su `type`, con la confirmación;
+  - "Conexión del asistente": temporal.
+
+**Decisiones técnicas:**
+- **Cliente HTTP:** Ktor, con kotlinx.serialization. Es multiplataforma, así que la capa de red se reutiliza tal cual si se migra a Compose Multiplatform (P7).
+- **`compileSdk` 37:** lo exige OkHttp 5.5, que usa Ktor por dentro. No cambia `minSdk` ni `targetSdk`.
+
+**Elementos temporales:**
+- **La clave compartida** se lee de `local.properties` y entra a la app como `BuildConfig`. Se elimina en P2.
+- **La pantalla "Conexión del asistente"**, con la URL manual. Se elimina en P6.
 
 ---
 
@@ -61,6 +80,8 @@ El MD 2 sigue siendo válido como historial. Sus Fases 0 a 4 están terminadas y
 - **Verificación en el Gateway.** El Gateway verifica el token de Firebase y deriva de él el `internal_user_id`. Con esto se elimina `APP_SHARED_SECRET`.
 - **Roles en Firestore** (cuidador y adulto mayor), con la relación entre el cuidador y el o los adultos mayores que tiene a cargo.
 - **El panel del cuidador configura lo real:** los contactos, los servicios habilitados (`granted_tools`) y las acciones que piden confirmación.
+
+**Decisión (29 de octubre):** se diseña para dos teléfonos, porque el cuidador administra a distancia y así el historial y el kill switch funcionan sin tener el teléfono del adulto mayor en la mano. Se construye primero en un solo teléfono, con el cuidador y el adulto mayor como identidades separadas desde el inicio, y después se agrega la vinculación del segundo teléfono.
 
 **Definición de Terminado:**
 - [ ] Un cuidador crea su cuenta e inicia sesión.
@@ -160,6 +181,7 @@ El MD 2 sigue siendo válido como historial. Sus Fases 0 a 4 están terminadas y
 - [ ] El backend es accesible por HTTPS con una URL fija, sin depender de la PC.
 - [ ] Los agentes no son accesibles desde internet.
 - [ ] Las 5 pruebas de robustez están documentadas y pasan.
+- [ ] Se elimina la pantalla "Conexión del asistente": la URL de Cloud Run va fija en la app.
 
 ---
 

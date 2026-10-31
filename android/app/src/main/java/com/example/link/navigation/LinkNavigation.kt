@@ -5,6 +5,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.link.GuardianApplication
+import com.example.link.ui.screens.connection.ConnectionScreen
+import com.example.link.ui.screens.connection.ConnectionViewModel
+import com.example.link.ui.screens.assistant.AssistantScreen
+import com.example.link.ui.screens.assistant.AssistantViewModel
 import com.example.link.ui.screens.caregiver.DashboardScreen
 import com.example.link.ui.screens.caregiver.PauseAssistantScreen
 import com.example.link.ui.screens.caregiver.SettingsScreen
@@ -34,6 +41,8 @@ private object Routes {
     const val SettingsContacts = "caregiver/settings/contacts"
     const val SettingsApps = "caregiver/settings/apps"
     const val SettingsPermissions = "caregiver/settings/permissions"
+    const val Connection = "caregiver/settings/connection"
+    const val Assistant = "senior/assistant"
     const val SeniorHome = "senior/home"
     const val Listening = "senior/listening"
     const val Confirmation = "senior/confirmation"
@@ -93,8 +102,16 @@ fun LinkApp(navController: NavHostController = rememberNavController()) {
                 onContacts = { navController.navigate(Routes.SettingsContacts) },
                 onApps = { navController.navigate(Routes.SettingsApps) },
                 onPermissions = { navController.navigate(Routes.SettingsPermissions) },
-                onSeniorMode = { navController.navigateSingle(Routes.SeniorHome) }
+                onSeniorMode = { navController.navigateSingle(Routes.SeniorHome) },
+                onConnection = { navController.navigate(Routes.Connection) }
             )
+        }
+        composable(Routes.Connection) {
+            val app = LocalContext.current.applicationContext as GuardianApplication
+            val connectionViewModel: ConnectionViewModel = viewModel {
+                ConnectionViewModel(app.connectionStore, app.repository)
+            }
+            ConnectionScreen(viewModel = connectionViewModel, onBack = { navController.popBackStack() })
         }
         composable(Routes.Pause) {
             PauseAssistantScreen(
@@ -114,8 +131,16 @@ fun LinkApp(navController: NavHostController = rememberNavController()) {
         composable(Routes.SeniorHome) {
             SeniorHomeScreen(
                 onListen = { navController.navigate(Routes.Listening) },
+                onWrite = { navController.navigate(Routes.Assistant) },
                 onCaregiverMode = { navController.returnTo(Routes.Dashboard) }
             )
+        }
+        composable(Routes.Assistant) {
+            val app = LocalContext.current.applicationContext as GuardianApplication
+            val assistantViewModel: AssistantViewModel = viewModel {
+                AssistantViewModel(app.repository)
+            }
+            AssistantScreen(viewModel = assistantViewModel, onBack = { navController.popBackStack() })
         }
         composable(Routes.Listening) {
             ListeningScreen(

@@ -6,6 +6,7 @@ import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -15,11 +16,8 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import kotlin.coroutines.cancellation.CancellationException
 
-class GuardianRepository(
-    private val baseUrl: String,
-    private val appSecret: String,
-    private val installId: String,
-) {
+class GuardianRepository(private val store: ConnectionStore) {
+
     private val client = HttpClient(OkHttp) {
         expectSuccess = true
         install(ContentNegotiation) {
@@ -33,12 +31,22 @@ class GuardianRepository(
         }
     }
 
+    suspend fun checkHealth(baseUrl: String): Boolean =
+        try {
+            client.get("${baseUrl.trimEnd('/')}/")
+            true
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            false
+        }
+
     suspend fun sendMessage(message: String): AssistantReply =
         try {
-            client.post("${baseUrl.trimEnd('/')}/app/message") {
-                header("X-App-Secret", appSecret)
+            client.post("${store.baseUrl.trimEnd('/')}/app/message") {
+                header("X-App-Secret", store.appSecret)
                 contentType(ContentType.Application.Json)
-                setBody(AppMessageRequest(installId, message))
+                setBody(AppMessageRequest(store.installId, message))
             }.body()
         } catch (e: CancellationException) {
             throw e
